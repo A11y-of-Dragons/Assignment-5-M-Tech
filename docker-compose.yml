@@ -4,7 +4,7 @@ services:
   backend:
     build: ./backend
     ports: 
-      -"5000:5000"
+      - "5000:5000"
     volumes: 
       - task_data:/app/data
 
@@ -16,5 +16,6 @@ services:
       - backend
     environment: 
       - VITE_API_URL=http://localhost:5000
+
 volumes:     
   task_data:  
