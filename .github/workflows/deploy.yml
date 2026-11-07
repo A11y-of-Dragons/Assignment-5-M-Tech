@@ -43,10 +43,7 @@ jobs:
         cd frontend
         npm test
     
-    
-    - name: Configure Docker for Task Tracker deployment
-      if: success()
-      run: gcloud auth configure-docker
+
     
     - name: Build and push Task Tracker backend
       if: success()
