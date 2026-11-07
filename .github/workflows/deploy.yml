@@ -42,15 +42,15 @@ jobs:
       run: |
         cd frontend
         npm test
-    
-
-    
+        
     - name: Build and push Task Tracker backend
       if: success()
       run: |
         cd backend
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-backend:${{ github.sha }} .
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-backend:${{ github.sha }}
+    
 
- 
     
     - name: Build and push Task Tracker frontend
       if: success()
