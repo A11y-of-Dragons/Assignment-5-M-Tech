@@ -56,7 +56,7 @@ jobs:
       if: success()
       run: |
         cd frontend
-        docker build
+        docker build -t recipe-frontend:${{ github.sha }} .
     
    
     - name: Get deployed URLs
