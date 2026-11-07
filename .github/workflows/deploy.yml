@@ -43,18 +43,6 @@ jobs:
         cd frontend
         npm test
     
-    - name: Authenticate to Google Cloud
-      if: success()
-      uses: google-github-actions/auth@v1
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-    
-    - name: Set up Google Cloud CLI
-      if: success()
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
     
     - name: Configure Docker for Task Tracker deployment
       if: success()
