@@ -1,4 +1,4 @@
-name: Task Tracker CI/CD Pipeline
+name: Recipe App CI/CD Pipeline
 
 on:
   push:
@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout Task Tracker code
+    - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Set up Node.js for Task Tracker
+    - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
@@ -23,38 +23,47 @@ jobs:
           backend/package-lock.json
           frontend/package-lock.json
     
-    - name: Install Task Tracker backend dependencies
+    - name: Install backend dependencies
       run: |
         cd backend
         npm ci
     
-    - name: Install Task Tracker frontend dependencies
+    - name: Install frontend dependencies
       run: |
         cd frontend
         npm ci
     
-    - name: Test Task Tracker API
+    - name: Run backend tests
       run: |
         cd backend
         npm test
     
-    - name: Test Task Tracker frontend
+    - name: Run frontend tests
       run: |
         cd frontend
         npm test
     
-   
-    - name: Build and push Task Tracker backend
+    
+    
+    - name: Build and push backend image
       if: success()
       run: |
         cd backend
-        docker build -t latest.
-        docker push
+        docker build -t recipe-backend:${{ github.sha }} .
+        docker push recipe-backend:${{ github.sha }}
     
-   
-    
-    - name: Get Task Tracker URLs
+    - name: Build and push frontend image
       if: success()
       run: |
-        echo "Task Tracker Backend: $(task-backend --format='value(status.url)')"
-        echo "Task Tracker Frontend: $(task-frontend --format='value(status.url)')"
+        cd frontend
+        # Get the backend URL for the frontend build
+        BACKEND_URL=$( recipe-backend --format='value(status.url)' 2>/dev/null || echo "https://recipe-backend-placeholder.run.app")
+        docker build --build-arg VITE_API_URL=$BACKEND_URL -t recipe-frontend:${{ github.sha }} .
+        docker push recipe-frontend:${{ github.sha }}
+    
+   
+    - name: Get deployed URLs
+      if: success()
+      run: |
+        echo "Backend URL: $(recipe-backend --region=${{ secrets.GCP_REGION }} --format='value(status.url)')"
+        echo "Frontend URL: $(recipe-frontend --region=${{ secrets.GCP_REGION }} --format='value(status.url)')"
