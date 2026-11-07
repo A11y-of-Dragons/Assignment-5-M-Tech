@@ -49,7 +49,7 @@ jobs:
       if: success()
       run: |
         cd backend
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-backend:${{ github.sha }} .
+
  
     
     - name: Build and push Task Tracker frontend
