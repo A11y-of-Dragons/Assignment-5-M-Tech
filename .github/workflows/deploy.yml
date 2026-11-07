@@ -48,8 +48,8 @@ jobs:
       if: success()
       run: |
         cd backend
-        docker build -t task-backend:${{ github.sha }} .
-        docker push task-backend:${{ github.sha }}
+        docker build -t latest.
+        docker push
     
    
     
