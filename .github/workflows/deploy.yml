@@ -42,28 +42,32 @@ jobs:
       run: |
         cd frontend
         npm test
-        
+
+
+    
+    - name: Configure Docker for Task Tracker deployment
+      if: success()
+      run: configure-docker
+    
     - name: Build and push Task Tracker backend
       if: success()
       run: |
         cd backend
-        docker build 
-        docker push 
-    
-
+        docker build -t task-backend:${{ github.sha }} .
+        docker push task-backend:${{ github.sha }}
     
     - name: Build and push Task Tracker frontend
       if: success()
       run: |
         cd frontend
         # Get the backend URL for the Task Tracker frontend
-        BACKEND_URL=$(gcloud run services describe task-backend --region=${{ secrets.GCP_REGION }} --format='value(status.url)' 2>/dev/null || echo "https://task-backend-placeholder.run.app")
-        docker build --build-arg VITE_API_URL=$BACKEND_URL -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-frontend:${{ github.sha }} .
-        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-frontend:${{ github.sha }}
+        BACKEND_URL= --format='value(status.url)' 2>/dev/null || echo "https://task-backend-placeholder.run.app")
+        docker build --build-arg VITE_API_URL=$BACKEND_URL -t task-frontend:${{ github.sha }} .
+        docker push task-frontend:${{ github.sha }}
     
 
     - name: Get Task Tracker URLs
       if: success()
       run: |
-        echo "Task Tracker Backend: $(gcloud run services describe task-backend --region=${{ secrets.GCP_REGION }} --format='value(status.url)')"
-        echo "Task Tracker Frontend: $(gcloud run services describe task-frontend --region=${{ secrets.GCP_REGION }} --format='value(status.url)')"
+        echo "Task Tracker Backend: $(--region=${{ secrets.GCP_REGION }} --format='value(status.url)')"
+        echo "Task Tracker Frontend: $(--region=${{ secrets.GCP_REGION }} --format='value(status.url)')"
