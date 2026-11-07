@@ -45,22 +45,16 @@ jobs:
     
     
     
-    - name: Build and push backend image
+    - name: Build backend image
       if: success()
       run: |
         cd backend
         docker build -t recipe-backend:${{ github.sha }} .
 
     
-    - name: Build and push frontend image
+    - name: Build frontend image
       if: success()
       run: |
         cd frontend
         docker build -t recipe-frontend:${{ github.sha }} .
     
-   
-    - name: Get deployed URLs
-      if: success()
-      run: |
-        echo "Backend URL: $(recipe-backend } --format='value(status.url)')"
-        echo "Frontend URL: $(recipe-frontend } --format='value(status.url)')"
