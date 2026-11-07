@@ -50,20 +50,17 @@ jobs:
       run: |
         cd backend
         docker build -t recipe-backend:${{ github.sha }} .
-        docker push recipe-backend:${{ github.sha }}
+
     
     - name: Build and push frontend image
       if: success()
       run: |
         cd frontend
-        # Get the backend URL for the frontend build
-        BACKEND_URL=$( recipe-backend --format='value(status.url)' 2>/dev/null || echo "https://recipe-backend-placeholder.run.app")
-        docker build --build-arg VITE_API_URL=$BACKEND_URL -t recipe-frontend:${{ github.sha }} .
-        docker push recipe-frontend:${{ github.sha }}
+        docker build
     
    
     - name: Get deployed URLs
       if: success()
       run: |
-        echo "Backend URL: $(recipe-backend --region=${{ secrets.GCP_REGION }} --format='value(status.url)')"
-        echo "Frontend URL: $(recipe-frontend --region=${{ secrets.GCP_REGION }} --format='value(status.url)')"
+        echo "Backend URL: $(recipe-backend } --format='value(status.url)')"
+        echo "Frontend URL: $(recipe-frontend } --format='value(status.url)')"
