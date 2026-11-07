@@ -76,30 +76,7 @@ jobs:
         docker build --build-arg VITE_API_URL=$BACKEND_URL -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-frontend:${{ github.sha }} .
         docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-frontend:${{ github.sha }}
     
-    - name: Deploy Task Tracker backend
-      if: success()
-      run: |
-        gcloud run deploy task-backend \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-backend:${{ github.sha }} \
-          --region ${{ secrets.GCP_REGION }} \
-          --platform managed \
-          --allow-unauthenticated \
-          --port 3000 \
-          --memory 512Mi \
-          --cpu 1
-    
-    - name: Deploy Task Tracker frontend
-      if: success()
-      run: |
-        gcloud run deploy task-frontend \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/task-frontend:${{ github.sha }} \
-          --region ${{ secrets.GCP_REGION }} \
-          --platform managed \
-          --allow-unauthenticated \
-          --port 80 \
-          --memory 512Mi \
-          --cpu 1
-    
+
     - name: Get Task Tracker URLs
       if: success()
       run: |
